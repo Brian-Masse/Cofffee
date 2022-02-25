@@ -22,11 +22,22 @@ class color:
 
         return color(r, g, b)
 
+    def return_string_in( self, code):
+        if code == "RGB":
+            return "rgb" + (self.R, self.G, self.B)
+        if code == "HSB":
+            return "{} ({}, {}, {})".format(code, self.R * 360, self.G * 100, self.B * 100)
+        if code == "HEX":
+            hex1 = self.__return_hex(self.R)
+            hex2 = self.__return_hex(self.G)
+            hex3 = self.__return_hex(self.B)
+            return "#{}{}{}{}{}{}".format(hex1[0], hex1[1], hex2[0], hex2[1], hex3[0], hex3[1])
+
     def return_color_in(self, code):
         if code == "RGB":
             return (self.R, self.G, self.B)
         if code == "HSB":
-            return "{} ({}, {}, {})".format(code, self.R * 360, self.G * 100, self.B * 100)
+            return (self.R, self.G, self.B)
         if code == "HEX":
             hex1 = self.__return_hex(self.R)
             hex2 = self.__return_hex(self.G)
