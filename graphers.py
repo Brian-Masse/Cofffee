@@ -10,7 +10,7 @@ import b_grapher.palletts as p
 import b_grapher.graph_props as m
 
 class distribution:
-    def __init__(self, graph, data, x, series, dir=1, domain=m.default_domain, title="", pallett=p.green_tea):
+    def __init__(self, graph, data, x, series, dir=1, domain=m.default_domain, point=-1, pallett=p.green_tea, title="", ):
         self.graph = graph
         self.data = data
         self.x = data[x]
@@ -34,10 +34,16 @@ class distribution:
 
         self.domain = domain
         self.domain.__reinit__(self)
+        self.point = self.__return_default_point__(point)
+        self.point.__reinit__(self)
+    
 
         self.title = title
 
         
+    def __return_default_point__(self, point):
+        if point == -1: return m.point( self.pallett.prim_RGB )
+        else: return point
 
     def __find_extremum__(self, func, index):
         extremum = 0
@@ -64,7 +70,6 @@ class distribution:
         return unique_series
 
     def create_series(self):
-
         returning = []
         index = 0
 
@@ -72,11 +77,15 @@ class distribution:
             for column in self.x:
                 rows = self.series == series
                 selection = self.data.loc[rows, column]
-                series_obj = self.Series(self, "" + series + ", " + column, selection, index)
+                # series_obj = self.Series(self, "" + series + ", " + column, selection, index)
+                series_obj = self.Series(self, "" + series, selection, index)
                 returning.append(series_obj)
                 index += 1
 
         return returning
+
+
+    # RENDER
 
     def render(self):
         self.domain.render()
@@ -87,6 +96,8 @@ class distribution:
         
         self.value_axis.render()
         self.series_axis.render()
+
+        self.graph.handler.render_que()
 
     class Series:
         def __init__(self, parent, name, x, index):
@@ -109,7 +120,6 @@ class distribution:
                 if self.random != -1: rand = self.random
                 series = (self.index * series_space) + random.uniform( 0, rand )
 
-
                 # print(self.parent.value_axis.interval)
                 value = ((value - self.parent.__min__ ) * self.parent.value_axis.interval ) + self.parent.pos[self.parent.dir]
                 series += self.parent.pos[ abs( self.parent.dir - 1) ]
@@ -119,10 +129,9 @@ class distribution:
                 if not np.isnan(value):
                                         
                     if self.parent.dir == 0:
-                        self.parent.graph.handler.render_point( (value, series), color, 2 )
+                        self.parent.point.render( (value, series), color )
                     else:
-                        self.parent.graph.handler.render_point( (series, value), color, 2 )
-
+                        self.parent.point.render( (series, value), color )
 
     # user functions:
 

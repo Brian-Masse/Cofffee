@@ -16,6 +16,9 @@ class handler:
         pygame.display.set_caption( self.title )
         pygame.display.set_icon( Icon )
 
+        self.surface = self.__return_surface__()
+        
+
     def start(self):
         while self.running:
             for event in pygame.event.get():
@@ -25,6 +28,14 @@ class handler:
         pygame.quit()
 
     # OBJECT RENDERING
+
+    def __return_surface__(self):
+        return pygame.Surface((self.width,self.height), pygame.SRCALPHA)
+
+    def render_que(self):
+        self.screen.blit( self.surface, (0, 0))
+        self.surface = self.__return_surface__()
+
 
     def render_text(self, message, position, color, size, alignment="center"):
         font = pygame.font.Font("/Users/brianmasse/Library/Fonts/Monoid-Retina.ttf", size)
@@ -38,10 +49,6 @@ class handler:
             textRect.right = position[0]
             
         self.screen.blit(text, textRect)
-
-    def render_point(self, pos, color, radius):
-        pygame.draw.circle(self.screen, color,
-                           (pos[0], self.height - pos[1]), radius)
 
     def render_rect(self, rect, color):
         new_rect = pygame.Rect(rect.left, self.height - rect.top, rect.width, rect.height)

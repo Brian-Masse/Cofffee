@@ -5,21 +5,24 @@ class color:
     hex_values = ["0", "1", "2", "3", "4", "5", "6",
                   "7", "8", "9", "A", "B", "C", "D", "E", "F"]
 
-    def __init__(self, R, G, B):
+    def __init__(self, R, G, B, A=1):
         self.R = R
         self.G = G
         self.B = B
+        self.A = A
 
     def return_color_between(self, color2, perc):
         r_change = color2.R - self.R
         g_change = color2.G - self.G
         b_change = color2.B - self.B
+        a_change = color2.A - self.A
 
         r = self.R + (r_change * perc)
         g = self.G + (g_change * perc)
         b = self.B + (b_change * perc)
+        a = self.A + (a_change * perc)
 
-        return color(r, g, b)
+        return color(r, g, b, a)
 
     def __convert_tuple__( self, tuple ):
         string = '('
@@ -32,25 +35,27 @@ class color:
 
     def return_string_in( self, code):
         if code == "RGB":
-            return "rgb" + self.__convert_tuple__((self.R, self.G, self.B))
+            return "rgba" + self.__convert_tuple__((self.R, self.G, self.B, self.A * 255))
         if code == "HSB":
-            return "{} ({}, {}, {})".format(code, self.R * 360, self.G * 100, self.B * 100)
+            return "hsb" + self.__convert_tuple__((self.R, self.G, self.B, self.A))
         if code == "HEX":
             hex1 = self.__return_hex(self.R)
             hex2 = self.__return_hex(self.G)
             hex3 = self.__return_hex(self.B)
-            return "#{}{}{}{}{}{}".format(hex1[0], hex1[1], hex2[0], hex2[1], hex3[0], hex3[1])
+            hex4 = self.__return_hex(self.A)
+            return "#{}{}{}{}{}{}".format(hex1[0], hex1[1], hex2[0], hex2[1], hex3[0], hex3[1], hex4[0], hex4[1])
 
     def return_color_in(self, code):
         if code == "RGB":
-            return (self.R, self.G, self.B)
+            return (self.R, self.G, self.B, self.A * 255)
         if code == "HSB":
-            return (self.R, self.G, self.B)
+            return (self.R, self.G, self.B, self.A)
         if code == "HEX":
             hex1 = self.__return_hex(self.R)
             hex2 = self.__return_hex(self.G)
             hex3 = self.__return_hex(self.B)
-            return "#{}{}{}{}{}{}".format(hex1[0], hex1[1], hex2[0], hex2[1], hex3[0], hex3[1])
+            hex4 = self.__return_hex(self.A)
+            return "#{}{}{}{}{}{}".format(hex1[0], hex1[1], hex2[0], hex2[1], hex3[0], hex3[1], hex4[0], hex4[1])
 
     def __return_hex(self, component):
         rounded = math.floor(component / 16)
