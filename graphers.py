@@ -1,111 +1,56 @@
-from cProfile import label
+from this import d
 import pandas as pd
 import random
 import numpy as np
 import math
+
 import b_grapher.color as c
-
-
-
-prim = c.color(190, 232, 194)
-second = c.color( 209, 255, 252 )
-
-grad = prim.return_color_grad(second, 100)
-
-back = c.color( 255, 255, 255)
-text = c.color(73, 89, 84)
-
-default = c.pallet(grad, prim, second, back, back, text)
-
-
-
-def round_dig(num, dig):
-    num = float(num)
-    num = num * (math.pow( 10, dig ))
-    num = round(num)
-    return num / ( math.pow(10, dig) )
-
-class Axis:
-    def __init__( self, chart, series, dir, interval=-1 ):
-        self.chart = chart
-        self.interval = interval
-        self.series = series
-        self.dir = dir
-        self.rendering = True
-
-        self.__series_type__ = self.return_series_type()
-
-        if interval == -1 and (self.__series_type__ == "int" or self.__series_type__ == "float"):
-            self.interval = self.return_auto_interval()
-    
-    def return_series_type(self):
-        string = str(self.series[0])
-        string = string.lstrip("-")
-        if string.isdigit():
-            return "float"
-    
-    def return_auto_interval(self):
-        return self.chart.size[0] / (self.series[-1] - self.series[0])
-
-    def render(self):
-        if self.rendering:
-            # domain
-        
-            origin  = ( self.chart.pos[0] - 10, self.chart.pos[1] - 10  )
-            x = math.cos(self.dir * (math.pi / 2))
-            y = math.sin(self.dir * (math.pi / 2))
-            end     = ( origin[0] + (self.chart.size[0] + 10 ) * x, origin[1] + (self.chart.size[1] + 10 ) * y )
-            self.chart.graph.handler.render_line( origin, end, self.chart.pallett.text_RGB  )
-
-            # labels
-
-            if self.__series_type__ == "int" or self.__series_type__ == "float":
-                spacing =  ((self.series[-1] - self.series[0]) / self.chart.size[self.dir]) * 100
-                print(spacing)
-                pos = int(self.series[0])
-                
-                while pos <= self.series[-1]:
-                    label_pos = ( origin[0] + (( (pos - self.chart.min) * self.interval ) * x) - ( 10 * y ), origin[1] + (( (pos - self.chart.min) * self.interval ) * y) - ( 10 * x ) )
-                    self.chart.graph.handler.render_text( str(round_dig( pos, 3 )), label_pos, self.chart.pallett.text_RGB, 10  )
-                    pos += spacing
-
-            else:
-                spacing = self.chart.size[self.dir] / len(self.series)
-                for i, label in enumerate(self.series):
-                    label_pos = ( origin[0] + (( i * spacing ) * x) - ( 10 * y ), origin[1] + (( i * spacing ) * y) - ( 10 * x ) )
-                    self.chart.graph.handler.render_text( label, label_pos, self.chart.pallett.text_RGB, 10, "right" )
-
-
-
-
+import b_grapher.axis as ax
+import b_grapher.palletts as p
+import b_grapher.graph_props as m
 
 class distribution:
-    def __init__(self, graph, data, x, series, size=(500, 500), pos=(100, 100), title="", pallett=default):
+    def __init__(self, graph, data, x, series, dir=1, domain=m.default_domain, title="", pallett=p.green_tea):
         self.graph = graph
         self.data = data
         self.x = data[x]
+        self.dir=dir
 
-        self.min = self.sort_df( self.x )[0]
+        self.__ordered__ = self.__sort_df__ ( self.x )
+        self.__min__ = self.__find_extremum__( min, 0 )
+        self.__max__ = self.__find_extremum__( max, -1 )
 
         self.series = data[series]
-        self.unique_series = self.unique_series(self.series)
+        self.__unique_series__ = self.unique_series(self.series)
         self.series_data = self.create_series()
 
-        self.pos = pos
-        self.size = size
-        
-        self.x_axis = Axis( self, self.sort_df( self.x ), 0)
-        self.y_axis = Axis( self, self.return_series_names(), 1 )
+        self.pos = domain.pos
+        self.size = domain.size
 
-        self.title = title
+        self.value_axis = ax.Axis( self, [self.__min__, self.__max__], self.dir)
+        self.series_axis = ax.Axis( self, self.return_series_names(), abs(self.dir - 1) )
 
         self.pallett = pallett
 
+        self.domain = domain
+        self.domain.__reinit__(self)
 
-    def sort_df( self, df ):
-        rotated = np.rot90(df.to_numpy())
+        self.title = title
+
         
-        return np.sort( rotated[np.logical_not(np.isnan(rotated))] )
+
+    def __find_extremum__(self, func, index):
+        extremum = 0
+        for series in self.__ordered__:
+            extremum = func( series[index], extremum )
+        return extremum
+
+    def __sort_df__( self, df ):
+        returning = []
+        rotated = np.rot90(df.to_numpy())
+        for series in rotated:
+            returning.append( list(np.sort( series[np.logical_not(np.isnan(series)) ])) )
+        return returning
 
     def return_series_names(self):
         returning = []
@@ -123,7 +68,7 @@ class distribution:
         returning = []
         index = 0
 
-        for series in self.unique_series:
+        for series in self.__unique_series__:
             for column in self.x:
                 rows = self.series == series
                 selection = self.data.loc[rows, column]
@@ -134,13 +79,14 @@ class distribution:
         return returning
 
     def render(self):
+        self.domain.render()
+        self.graph.handler.render_text(self.title, ( self.pos[0] + ( self.size[0] / 2 ),  self.pos[1] + ( self.size[1] ) ), self.pallett.text_RGB, 20)
+        
         for series in self.series_data:
             series.render()
         
-        self.x_axis.render()
-        self.y_axis.render()
-
-        self.graph.handler.render_text(self.title, ( self.pos[0] + ( self.size[0] / 2 ),  self.pos[1] + ( self.size[1] ) ), self.pallett.text_RGB, 20)
+        self.value_axis.render()
+        self.series_axis.render()
 
     class Series:
         def __init__(self, parent, name, x, index):
@@ -149,22 +95,72 @@ class distribution:
             self.x = np.sort(x.to_numpy())
             self.index = index
 
+            self.random = -1
+
         def render(self):
     
-            y_space = (self.parent.size[1] / len(self.parent.series_data))
+            series_space = (self.parent.size[ abs( self.parent.dir - 1) ] / len(self.parent.series_data))
 
-            steps = 1 / len(self.parent.unique_series)
+            steps = 1 / len(self.parent.__unique_series__)
 
-            for x in self.x:
+            for value in self.x:
 
-                y = (self.index * y_space) + random.uniform(-y_space / 5,  y_space / 5)
+                rand = series_space / 3
+                if self.random != -1: rand = self.random
+                series = (self.index * series_space) + random.uniform( 0, rand )
 
-                x = ((x - self.parent.min ) * self.parent.x_axis.interval ) + self.parent.pos[0]
-                y = y + self.parent.pos[1]
 
+                # print(self.parent.value_axis.interval)
+                value = ((value - self.parent.__min__ ) * self.parent.value_axis.interval ) + self.parent.pos[self.parent.dir]
+                series += self.parent.pos[ abs( self.parent.dir - 1) ]
 
                 color = self.parent.pallett.primary_color.return_color_between( self.parent.pallett.secondary_color, steps * self.index ).return_color_in("RGB")
 
-                if not np.isnan(x):
-                    self.parent.graph.handler.render_point( (x, y), color, 2 )
+                if not np.isnan(value):
+                                        
+                    if self.parent.dir == 0:
+                        self.parent.graph.handler.render_point( (value, series), color, 2 )
+                    else:
+                        self.parent.graph.handler.render_point( (series, value), color, 2 )
 
+
+    # user functions:
+
+    def update_series_rand( self, rand ):
+        for series in self.series_data:
+            series.random = rand
+        return self
+
+            
+
+
+
+# import pygame
+# import pandas as pd
+# import numpy as np
+
+# import b_grapher.pyg as pg
+# import b_grapher.color as c
+
+# import b_grapher.graphers as g
+# import b_grapher.grapher as go
+
+# xls = pd.ExcelFile(
+#     "/Users/brianmasse/Developer/Classes/CSC630/independent_work/Coffee Chain Visualization/data/Coffee Chain.xlsx"
+# )
+# data = pd.read_excel(xls, "Coffee Chain")
+
+# width = 1700
+# height = 600
+
+# handler = pg.handler( width, height )
+# main = go.Grapher(handler, (1700, 1000))
+
+# profit = g.distribution(main, data, ["Profit"], "Product Type", 
+#     domain=m.domain((100, 100), (500, 500)),
+#     title="Profit Of Various Beverage Types ($)")
+
+# main.graphs = [profit]
+# main.render()
+
+# main.handler.start()

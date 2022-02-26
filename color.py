@@ -1,6 +1,5 @@
 import math
 
-
 class color:
 
     hex_values = ["0", "1", "2", "3", "4", "5", "6",
@@ -22,9 +21,18 @@ class color:
 
         return color(r, g, b)
 
+    def __convert_tuple__( self, tuple ):
+        string = '('
+        for i, item in enumerate(tuple):
+            if i == len(tuple) - 1:
+                string = string + str(item)
+            else:    
+                string = string + str(item) + ","
+        return string + ")"
+
     def return_string_in( self, code):
         if code == "RGB":
-            return "rgb" + (self.R, self.G, self.B)
+            return "rgb" + self.__convert_tuple__((self.R, self.G, self.B))
         if code == "HSB":
             return "{} ({}, {}, {})".format(code, self.R * 360, self.G * 100, self.B * 100)
         if code == "HEX":
@@ -137,3 +145,4 @@ class pallet:
         self.back_RGB = background.return_color_in("RGB")
         self.second_back_RGB = secondary_background.return_color_in("RGB")
         self.text_RGB = text.return_color_in("RGB")
+

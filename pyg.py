@@ -1,15 +1,20 @@
 import pygame
 
-pygame.init()
-
-
 class handler:
-    def __init__(self, width=0, height=0):
+    def __init__(self, width=0, height=0, title=""):
+        pygame.init()
+
         self.width = width
         self.height = height
-        self.running = True
+    
+        self.title = title
 
+        Icon = pygame.image.load( "/Users/brianmasse/opt/miniconda3/envs/CSC630/lib/python3.9/site-packages/b_grapher/Extra/icon.png" )
+
+        self.running = True
         self.screen = pygame.display.set_mode((self.width, self.height))
+        pygame.display.set_caption( self.title )
+        pygame.display.set_icon( Icon )
 
     def start(self):
         while self.running:
@@ -22,7 +27,7 @@ class handler:
     # OBJECT RENDERING
 
     def render_text(self, message, position, color, size, alignment="center"):
-        font = pygame.font.Font("freesansbold.ttf", size)
+        font = pygame.font.Font("/Users/brianmasse/Library/Fonts/Monoid-Retina.ttf", size)
         text = font.render(message, True, color)
         textRect = text.get_rect()
 
@@ -37,6 +42,10 @@ class handler:
     def render_point(self, pos, color, radius):
         pygame.draw.circle(self.screen, color,
                            (pos[0], self.height - pos[1]), radius)
+
+    def render_rect(self, rect, color):
+        new_rect = pygame.Rect(rect.left, self.height - rect.top, rect.width, rect.height)
+        pygame.draw.rect(self.screen, color, new_rect)
 
     def render_line(self, start_pos, end_pos, color):
         pygame.draw.line(self.screen, color, (
