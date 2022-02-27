@@ -35,3 +35,16 @@ back = c.color(187, 240, 225)
 text = c.color(43, 92, 87)
 
 blue_lagoon = c.pallet(grad, prim, second, back, back, text)
+
+
+# Milk Shake
+
+prim = c.color(252, 48, 79)
+second = c.color(59, 176, 255)
+
+grad = prim.return_color_grad(second, 100)
+
+back = c.color(245, 218, 228)
+text = c.color(190, 69, 121)
+
+milk_shake = c.pallet(grad, prim, second, back, back, text)

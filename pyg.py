@@ -56,6 +56,6 @@ class handler:
                                rect.top, rect.width, rect.height)
         pygame.draw.rect(self.screen, color, new_rect)
 
-    def render_line(self, start_pos, end_pos, color):
+    def render_line(self, start_pos, end_pos, color, thickness=2):
         pygame.draw.line(self.screen, color, (
-            start_pos[0], self.height - start_pos[1]), (end_pos[0], self.height - end_pos[1]))
+            start_pos[0], self.height - start_pos[1]), (end_pos[0], self.height - end_pos[1]), thickness)
