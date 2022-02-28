@@ -48,3 +48,15 @@ back = c.color(245, 218, 228)
 text = c.color(190, 69, 121)
 
 milk_shake = c.pallet(grad, prim, second, back, back, text)
+
+# Planetary Punch
+
+prim = c.color(214, 161, 255)
+second = c.color(129, 240, 179)
+
+grad = prim.return_color_grad(second, 100)
+
+back = c.color(20, 20, 20)
+text = c.color(255, 255, 255)
+
+planetary_punch = c.pallet(grad, prim, second, back, back, text)

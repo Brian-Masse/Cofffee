@@ -1,4 +1,5 @@
 from operator import sub
+from matplotlib.pyplot import text
 import pandas as pd
 import random
 import numpy as np
@@ -164,7 +165,7 @@ class distribution:
 
 
 class area:
-    def __init__(self, graph, data, x, y, series, dir=0, round=10, domain=m.default_domain, point=-1, pallett=p.green_tea, title="", ):
+    def __init__(self, graph, data, x, y, series, dir=0, domain=m.default_domain, point=-1, line=-1, title=-1, value_axis=-1, series_axis=-1, pallett=p.green_tea,):
         self.graph = graph
         self.data = data
         self.dir = dir
@@ -200,20 +201,23 @@ class area:
         self.pos = domain.pos
         self.size = domain.size
 
-        self.value_axis = ax.Axis(self, self.__return_values__(), self.dir, min=self.__x_min__)
-        self.series_axis = ax.Axis( self, self.__return_series_names__(), self.opp, min=self.__y_min__)
-
         self.pallett = pallett
+
+        self.value_axis = ax.Axis(self, self.__return_values__(), self.dir, min=self.__x_min__, axis=value_axis)
+        self.series_axis = ax.Axis( self, self.__return_series_names__(), self.opp, min=self.__y_min__, axis=series_axis)
 
         self.domain = domain
         self.domain.__reinit__(self)
-        self.point = self.__return_default_point__(point)
+        self.point = self.__return_default__(point, m.point(self.pallett.prim_RGB))
         self.point.__reinit__(self)
-        self.title = title
+        self.line = self.__return_default__(line, m.line(self.pallett.text_RGB))
+        self.line.__reinit__(self)
+        self.title = self.__return_default__( title, m.text(text=""))
+        self.title.__reinit__(self)
 
-    def __return_default_point__(self, point):
-        if point == -1: return m.point(self.pallett.prim_RGB)
-        return point
+    def __return_default__(self, obj, default):
+        if obj == -1: return default
+        return obj
 
     # find the value series depending on the dir
     def __return_values__(self):
@@ -306,8 +310,8 @@ class area:
 
     def render(self):
         self.domain.render()
-        self.graph.handler.render_text(self.title, (self.pos[0] + (
-            self.size[0] / 2),  self.pos[1] + (self.size[1])), self.pallett.text_RGB, 20)
+        self.title.render( "", (self.pos[0] + (
+            self.size[0] / 2),  self.pos[1] + (self.size[1] + 20)), self.pallett.text_RGB, alignmentY="bottom")
 
         for series in self.series_data:
             series.render()
@@ -361,17 +365,17 @@ class area:
             points.sort( key=lambda y:y[dir] )
             for i in range(0, len(points) - 1):
                 
-                self.parent.graph.handler.render_line( points[i], points[i + 1], self.parent.pallett.text_RGB )
+                self.parent.line.render( points[i], points[i + 1], color )
 
 
 
 
 
 
-# import pygame
-# import pandas as pd
-# import numpy as np
-# import sys
+import pygame
+import pandas as pd
+import numpy as np
+import sys
 
 
 # import coffee.color as c
@@ -395,19 +399,38 @@ class area:
 # handler = pg.handler( width, height, title="Coffee Shop Data")
 # main = go.Grapher(handler, (1700, 1000))
 
+# thick_line = m.line(
+#         color=(255, 0, 0),
+#         stroke=5
+#     )
 
 # area = g.area(main, data, "count()", "Marketing", "Product Type",  
 #     domain=m.domain(
 #         pos=(100, 550),
 #         size=( 1200, 300 )),
+#     line=thick_line,
+#     point=m.point(
+#         color=(0, 0, 0),
+#         shape=3
+#     ),
+#     title=m.text(
+#         fontSize=25,
+#         text="Quantity of Marketing Campaigns for Various Beverages",
+#     ),
+#     value_axis=ax.axis(
+#         line=thick_line,
+#         ticks=thick_line,
+#         labels=m.text( 
+#             color=(255, 0, 0),
+#             fontSize=10
+#         ),
+#     ),
 #     pallett=active_pallett,
-#     title="Quantity of Marketing Campaigns for Various Beverages",
 # )
 
 
 # main.graphs = [ area ]
 # main.handler.screen.fill( active_pallett.back_RGB )
 # main.render()
-
 
 # handler.start()

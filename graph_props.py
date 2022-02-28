@@ -4,6 +4,99 @@ import math
 import coffee.palletts as p
 
 
+class text:
+    def __init__(self, color=-1, font="/Users/brianmasse/Library/Fonts/Monoid-Retina.ttf", fontSize=10, text=-1):
+        self.color = color
+        self.font = font
+        self.fontSize = fontSize
+        self.text = text
+
+        self.parent = None
+        self.rendering = True
+
+        self.default = False
+
+    def __reinit__(self, parent):
+        self.parent = parent
+        if self.color == -1: 
+            self.default = True
+            self.color = parent.pallett.text_RGB
+
+    def __color__(self, color):
+        if color == - 1 or not self.default:
+            return self.color
+        else:
+            return color
+    
+    def __text__(self, text):
+        if self.text == -1: return text
+        else: return self.text
+
+    def render(self, message, pos, color=-1, alignmentX="center", alignmentY="center" ):
+        if self.rendering:
+            font = pygame.font.Font( self.font, self.fontSize)
+            text = font.render(self.__text__(message), True, self.__color__(color))
+            textRect = text.get_rect()
+
+            y = self.parent.graph.handler.height - pos[1]
+            textRect.center = (pos[0], y)
+            if alignmentX == "left":
+                textRect.left = pos[0]
+            elif alignmentX == "right":
+                textRect.right = pos[0]
+            if alignmentY == "top":
+                textRect.top = y
+            elif alignmentY == "bottom":
+                textRect.bottom = y
+
+            self.parent.graph.handler.surface.blit(text, textRect)
+
+    # USER FUNCTIONS
+    def update_visibility(self, vis):
+            self.rendering = vis
+            return self.parent
+
+
+
+class line:
+    def __init__(self, color=-1, stroke=1):
+        self.color = color
+        self.stroke = stroke
+
+        self.parent = None
+        self.rendering = True
+
+        self.default = False
+
+    def __reinit__(self, parent):
+        self.parent = parent
+        if self.color == -1: 
+            self.default = True
+            self.color = parent.pallett.text_RGB
+
+    def __color__(self, color):
+        if color == - 1 or not self.default:
+            return self.color
+        else:
+            return color
+
+    def render(self, p, p2, color=-1):
+        if self.rendering:
+            pos = (p[0], self.parent.graph.handler.height - p[1])
+            pos2 = (p2[0], self.parent.graph.handler.height - p2[1])
+
+            pygame.draw.line( self.parent.graph.handler.screen, self.__color__(color), pos, pos2, self.stroke)
+
+    # USER FUNCTIONS
+    def update_visibility(self, vis):
+            self.rendering = vis
+            return self.parent
+
+
+
+
+
+
 class point:
     def __init__(self, color=-1, radius=2, stroke=0, stroke_color=-1, shape=-1):
         self.color = color
@@ -17,6 +110,7 @@ class point:
         self.parent = None
         
         self.rendering = True
+        self.default = False
 
     def __reinit__(self, parent):
         self.parent = parent
@@ -24,10 +118,11 @@ class point:
         if self.stroke_color == -1:
             self.stroke_color = parent.pallett.text_RGB
         if self.color == -1:
+            self.default = True
             self.color = parent.pallett.prim_RGB
 
     def __color__(self, color):
-        if color == - 1:
+        if color == - 1 or not self.default:
             return self.color
         else:
             return color
@@ -101,6 +196,8 @@ class domain:
     def update_visibility(self, vis):
         self.rendering = vis
         return self.parent
+
+
 
 
 default_domain = domain(

@@ -1,5 +1,6 @@
 import math
 
+import coffee.graph_props as m
 
 def round_dig(num, dig):
     num = float(num)
@@ -7,14 +8,37 @@ def round_dig(num, dig):
     num = round(num)
     return num / ( math.pow(10, dig) )
 
+class axis():
+    def __init__ (self, line=-1, ticks=-1, labels=-1):
+        self.parent = None
+
+        self.line = self.__return_default__(line, m.line()) 
+        self.ticks = self.__return_default__(ticks, m.line()) 
+        self.labels = self.__return_default__(labels, m.text()) 
+        
+    def __reinit__(self, parent):
+        self.parent = parent
+        self.line.__reinit__(self.parent)
+        self.ticks.__reinit__(self.parent)
+        self.labels.__reinit__(self.parent)
+
+    def __return_default__(self, obj, default):
+        if obj == -1: return default
+        return obj
+
+
+
 class Axis:
-    def __init__( self, parent, series, dir, interval=-1, min=0 ):
+    def __init__( self, parent, series, dir, interval=-1, min=0, axis=-1 ):
         self.parent = parent
         self.interval = interval
         self.series = series
 
         self.dir = dir
         self.min = min
+
+        self.axis = self.__return_default_axis__(axis)
+        self.axis.__reinit__(self.parent)
 
         self.rendering = True
 
@@ -24,6 +48,10 @@ class Axis:
         if interval == -1 and (self.__series_type__ == "int" or self.__series_type__ == "float"):
             self.interval = self.__return_auto_interval__()
     
+    def __return_default_axis__(self, ax):
+        if ax == -1: return axis()
+        return ax
+
     def __return_series_type__(self):
         string = str(self.series[0])
         string = string.lstrip("-")
@@ -48,7 +76,7 @@ class Axis:
             x = math.cos(self.dir * (math.pi / 2))
             y = math.sin(self.dir * (math.pi / 2))
             end     = ( origin[0] + (self.parent.size[0] + 10 ) * x, origin[1] + (self.parent.size[1] + 10 ) * y )
-            self.parent.graph.handler.render_line( origin, end, self.parent.pallett.text_RGB  )
+            self.axis.line.render( origin, end, self.parent.pallett.text_RGB  )
 
             # labels
 
@@ -62,8 +90,9 @@ class Axis:
                     second = origin[abs(self.dir - 1)] - 10
                     
                     label_pos = (( prim * x) + ( second * y ), ( prim * y) + ( second * x ))
-
-                    self.parent.graph.handler.render_text( str(round_dig( pos, 1 )), label_pos, self.parent.pallett.text_RGB, 10, self.__return_alignment__()  )
+                    
+                    self.__render_ticks__(label_pos, x, y)
+                    self.axis.labels.render( str(round_dig( pos, 1 )), label_pos, self.parent.pallett.text_RGB, self.__return_alignment__()  )
                     pos += spacing
                 
             # render all series
@@ -71,8 +100,16 @@ class Axis:
                 spacing = self.parent.size[self.dir] / len(self.series)
                 for i, label in enumerate(self.series):
                     label_pos = ( origin[0] + (( i * spacing ) * x) - ( 10 * y ), origin[1] + (( i * spacing ) * y) - ( 10 * x ) )
-                    self.parent.graph.handler.render_text( str(label), label_pos, self.parent.pallett.text_RGB, 10, self.__return_alignment__() )
+                    self.__render_ticks__(label_pos, x, y)
+                    self.axis.labels.render( str(label), label_pos, self.parent.pallett.text_RGB, self.__return_alignment__()  )
 
+
+    def __render_ticks__(self, label_pos, x, y):
+        tick_pos = ( label_pos[0] + (10 * y) , label_pos[1] + (10 * x) )
+        tick_pos2 = ( label_pos[0] + (5 * y) , label_pos[1] + (5 * x) )
+        # tick_pos2 = ( label_pos[0] -   , label_pos[1] - 10 )
+
+        self.axis.ticks.render( tick_pos, tick_pos2 )
 
     # USER FUNCTIONS
 

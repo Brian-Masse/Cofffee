@@ -151,3 +151,9 @@ class pallet:
         self.back_RGB = background.return_color_in("RGB")
         self.second_back_RGB = secondary_background.return_color_in("RGB")
         self.text_RGB = text.return_color_in("RGB")
+
+        self.prim_HEX = primary_color.return_color_in("HEX")
+        self.second_HEX = secondary_color.return_color_in("HEX")
+        self.back_HEX = background.return_color_in("HEX")
+        self.second_back_HEX = secondary_background.return_color_in("HEX")
+        self.text_HEX = text.return_color_in("HEX")
