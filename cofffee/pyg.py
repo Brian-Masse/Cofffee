@@ -1,5 +1,6 @@
 import pygame
 import sys
+import os
 
 class handler:
     def __init__(self, width=0, height=0, title=""):
@@ -10,8 +11,16 @@ class handler:
 
         self.title = title
 
-        Icon = pygame.image.load(
-            str(sys.path[-1]) + "/cofffee/Extra/icon.png")
+        p = ""
+        for path in sys.path:
+            if "site-packages" in path:
+                p = path + "/cofffee/Extra/icon.png"
+                print(p)
+                break
+
+        if os.path.exists(p):
+            Icon = pygame.image.load(p)
+        
 
         self.running = True
         self.screen = pygame.display.set_mode((self.width, self.height))
