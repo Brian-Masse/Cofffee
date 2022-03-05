@@ -1,8 +1,8 @@
 
 from distutils.core import setup
 setup(
-    name='Coffee',         # How you named your package folder (MyLib)
-    packages=['Coffee'],   # Chose the same as "name"
+    name='coffee',         # How you named your package folder (MyLib)
+    packages=['coffee'],   # Chose the same as "name"
     version='1.0',      # Start with a small number and increase it with every change you make
     # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     license='MIT',
