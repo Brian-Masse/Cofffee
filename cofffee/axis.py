@@ -1,6 +1,6 @@
 import math
 
-import cofffee.graph_props as m
+import graph_props as m
 
 
 def round_dig(num, dig):

@@ -1,7 +1,7 @@
 import pygame
 import math
 
-import cofffee.palletts as p
+import palletts as p
 
 
 class text:

@@ -11,7 +11,7 @@ class handler:
         self.title = title
 
         Icon = pygame.image.load(
-            "/Users/brianmasse/opt/miniconda3/envs/CSC630/lib/python3.9/site-packages/cofffee/Extra/icon.png")
+            "cofffee/Extra/icon.png")
 
         self.running = True
         self.screen = pygame.display.set_mode((self.width, self.height))

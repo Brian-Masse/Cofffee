@@ -3,7 +3,8 @@ from distutils.core import setup
 setup(
     name='cofffee',         # How you named your package folder (MyLib)
     packages=['cofffee'],   # Chose the same as "name"
-    version='1.0',      # Start with a small number and increase it with every change you make
+    # Start with a small number and increase it with every change you make
+    version='1.0.01',
     # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     license='MIT',
     # Give a short description about your library
@@ -13,7 +14,7 @@ setup(
     # Provide either the link to your github or to your website
     url='https://github.com/Brian-Masse/Coffee',
     # I explain this later on
-    download_url='https://github.com/Brian-Masse/Coffee/archive/refs/tags/visualization.tar.gz',
+    download_url='https://github.com/Brian-Masse/Coffee/archive/refs/tags/v1.0.01-public.tar.gz',
     keywords=['Visualization', 'python', 'pandas', 'rendering', 'data', 'customizable',
               'powerful', 'intuitive'],   # Keywords that define your package best
     install_requires=[            # I get to this in a second

@@ -7,10 +7,10 @@ import random
 import numpy as np
 import math
 
-import cofffee.color as c
-import cofffee.axis as ax
-import cofffee.palletts as p
-import cofffee.graph_props as m
+import color as c
+import axis as ax
+import palletts as p
+import graph_props as m
 
 
 def round_dig(num, base=5, dig=1):
