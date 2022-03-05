@@ -1,5 +1,5 @@
 import pygame
-
+import sys
 
 class handler:
     def __init__(self, width=0, height=0, title=""):
@@ -11,7 +11,7 @@ class handler:
         self.title = title
 
         Icon = pygame.image.load(
-            "cofffee/Extra/icon.png")
+            str(sys.path[-1]) + "/cofffee/Extra/icon.png")
 
         self.running = True
         self.screen = pygame.display.set_mode((self.width, self.height))
