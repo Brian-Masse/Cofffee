@@ -1,0 +1,4 @@
+include cofffee/data/extra/icon.png
+include cofffee/data/coffee.xlsx
+include cofffee/data/fonts/*.ttf
+include cofffee/data/fonts/*.otf
