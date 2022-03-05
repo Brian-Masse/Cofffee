@@ -1,7 +1,7 @@
 import pygame
 import math
 
-import coffee.palletts as p
+import cofffee.palletts as p
 
 
 class text:
@@ -18,7 +18,7 @@ class text:
 
     def __reinit__(self, parent):
         self.parent = parent
-        if self.color == -1: 
+        if self.color == -1:
             self.default = True
             self.color = parent.pallett.text_RGB
 
@@ -27,15 +27,18 @@ class text:
             return self.color
         else:
             return color
-    
-    def __text__(self, text):
-        if self.text == -1: return text
-        else: return self.text
 
-    def render(self, message, pos, color=-1, alignmentX="center", alignmentY="center" ):
+    def __text__(self, text):
+        if self.text == -1:
+            return text
+        else:
+            return self.text
+
+    def render(self, message, pos, color=-1, alignmentX="center", alignmentY="center"):
         if self.rendering:
-            font = pygame.font.Font( self.font, self.fontSize)
-            text = font.render(self.__text__(message), True, self.__color__(color))
+            font = pygame.font.Font(self.font, self.fontSize)
+            text = font.render(self.__text__(message),
+                               True, self.__color__(color))
             textRect = text.get_rect()
 
             y = self.parent.graph.handler.height - pos[1]
@@ -53,9 +56,8 @@ class text:
 
     # USER FUNCTIONS
     def update_visibility(self, vis):
-            self.rendering = vis
-            return self.parent
-
+        self.rendering = vis
+        return self.parent
 
 
 class line:
@@ -70,7 +72,7 @@ class line:
 
     def __reinit__(self, parent):
         self.parent = parent
-        if self.color == -1: 
+        if self.color == -1:
             self.default = True
             self.color = parent.pallett.text_RGB
 
@@ -85,16 +87,13 @@ class line:
             pos = (p[0], self.parent.graph.handler.height - p[1])
             pos2 = (p2[0], self.parent.graph.handler.height - p2[1])
 
-            pygame.draw.line( self.parent.graph.handler.screen, self.__color__(color), pos, pos2, self.stroke)
+            pygame.draw.line(self.parent.graph.handler.screen,
+                             self.__color__(color), pos, pos2, self.stroke)
 
     # USER FUNCTIONS
     def update_visibility(self, vis):
-            self.rendering = vis
-            return self.parent
-
-
-
-
+        self.rendering = vis
+        return self.parent
 
 
 class point:
@@ -108,7 +107,7 @@ class point:
 
         self.handler = None
         self.parent = None
-        
+
         self.rendering = True
         self.default = False
 
@@ -149,15 +148,16 @@ class point:
                 pygame.draw.circle(
                     self.handler.surface, self.stroke_color, pos, self.radius + self.stroke)
                 pygame.draw.circle(self.handler.surface,
-                                self.__color__(color), pos, self.radius)
+                                   self.__color__(color), pos, self.radius)
             else:
                 self.__render_polygon__(pos, self.__color__(color))
 
-
     # USER FUNCTIONS
+
     def update_visibility(self, vis):
-            self.rendering = vis
-            return self.parent
+        self.rendering = vis
+        return self.parent
+
 
 class domain:
     def __init__(self, pos, size, padding=(75, 30), parent=None, pallett=p.green_tea):
@@ -167,7 +167,7 @@ class domain:
 
         self.pallett = pallett
         self.parent = parent
-        
+
         self.rendering = True
 
     def __reinit__(self, parent):
@@ -176,7 +176,7 @@ class domain:
 
     def render(self):
         if self.rendering:
-        
+
             rect = pygame.Rect(
                 self.pos[0] - self.padding[0],
                 self.pos[1] + self.size[1] + self.padding[1],
@@ -185,19 +185,16 @@ class domain:
             )
 
             self.parent.graph.handler.render_rect(rect, self.pallett.back_RGB)
-        
 
     # User Functions
 
     def update_padding(self, padding):
         self.padding = padding
         return self.parent
-    
+
     def update_visibility(self, vis):
         self.rendering = vis
         return self.parent
-
-
 
 
 default_domain = domain(

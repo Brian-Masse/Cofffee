@@ -1,4 +1,4 @@
-import coffee.color as c
+import cofffee.color as c
 
 # green tea
 
@@ -12,7 +12,7 @@ text = c.color(73, 89, 84)
 
 green_tea = c.pallet(grad, prim, second, back, back, text)
 
-# Coffee Bean
+# cofffee Bean
 
 prim = c.color(179, 69, 18, 0.5)
 second = c.color(89, 42, 20)
@@ -22,7 +22,7 @@ grad = prim.return_color_grad(second, 100)
 back = c.color(230, 171, 145)
 text = c.color(61, 22, 4)
 
-coffee_bean = c.pallet(grad, prim, second, back, back, text)
+cofffee_bean = c.pallet(grad, prim, second, back, back, text)
 
 # Blue Lagoon
 

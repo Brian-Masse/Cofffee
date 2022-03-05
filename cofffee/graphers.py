@@ -1,3 +1,5 @@
+import sys
+import pygame
 from operator import sub
 from matplotlib.pyplot import text
 import pandas as pd
@@ -5,18 +7,18 @@ import random
 import numpy as np
 import math
 
-import coffee.color as c
-import coffee.axis as ax
-import coffee.palletts as p
-import coffee.graph_props as m
-
+import cofffee.color as c
+import cofffee.axis as ax
+import cofffee.palletts as p
+import cofffee.graph_props as m
 
 
 def round_dig(num, base=5, dig=1):
     num = float(num)
-    num = num / (math.pow( base, dig ))
+    num = num / (math.pow(base, dig))
     num = round(num)
-    return num * ( math.pow( base, dig) )
+    return num * (math.pow(base, dig))
+
 
 class distribution:
     def __init__(self, graph, data, x, series, dir=1, domain=m.default_domain, point=-1, pallett=p.green_tea, title="", ):
@@ -36,7 +38,8 @@ class distribution:
         self.pos = domain.pos
         self.size = domain.size
 
-        self.value_axis = ax.Axis(self, [self.__min__, self.__max__], self.dir, min=self.__min__)
+        self.value_axis = ax.Axis(
+            self, [self.__min__, self.__max__], self.dir, min=self.__min__)
         self.series_axis = ax.Axis(
             self, self.__return_series_names__(), abs(self.dir - 1),  min=self.__min__)
 
@@ -155,15 +158,6 @@ class distribution:
         return self
 
 
-
-
-
-
-
-
-
-
-
 class area:
     def __init__(self, graph, data, x, y, series, dir=0, domain=m.default_domain, point=-1, line=-1, title=-1, value_axis=-1, series_axis=-1, pallett=p.green_tea,):
         self.graph = graph
@@ -177,7 +171,6 @@ class area:
         self.x = self.__order_data__(x)
         self.y = self.__order_data__(y)
 
-
         # get the count of data, if it was specified (this will also override the dir, if one series is the count)
         # By this point the dir is known
         self.x = self.__count__(self.y, y, self.x, 1)
@@ -187,51 +180,58 @@ class area:
         # this needs the prepared data
         self.series_data = self.create_series()
 
-
         self.__x_min__ = self.__find_extremum__(min, self.x)
         self.__y_min__ = self.__find_extremum__(min, self.y)
         self.__x_max__ = self.__find_extremum__(max, self.x)
         self.__y_max__ = self.__find_extremum__(max, self.y)
 
         # for the series render function
-        self.mins = [ self.__x_min__, self.__y_min__ ]
-        self.maxs = [ self.__x_max__, self.__y_max__ ]
-
+        self.mins = [self.__x_min__, self.__y_min__]
+        self.maxs = [self.__x_max__, self.__y_max__]
 
         self.pos = domain.pos
         self.size = domain.size
 
         self.pallett = pallett
 
-        self.value_axis = ax.Axis(self, self.__return_values__(), self.dir, min=self.__x_min__, axis=value_axis)
-        self.series_axis = ax.Axis( self, self.__return_series_names__(), self.opp, min=self.__y_min__, axis=series_axis)
+        self.value_axis = ax.Axis(self, self.__return_values__(
+        ), self.dir, min=self.__x_min__, axis=value_axis)
+        self.series_axis = ax.Axis(self, self.__return_series_names__(
+        ), self.opp, min=self.__y_min__, axis=series_axis)
 
         self.domain = domain
         self.domain.__reinit__(self)
-        self.point = self.__return_default__(point, m.point(self.pallett.prim_RGB))
+        self.point = self.__return_default__(
+            point, m.point(self.pallett.prim_RGB))
         self.point.__reinit__(self)
-        self.line = self.__return_default__(line, m.line(self.pallett.text_RGB))
+        self.line = self.__return_default__(
+            line, m.line(self.pallett.text_RGB))
         self.line.__reinit__(self)
-        self.title = self.__return_default__( title, m.text(text=""))
+        self.title = self.__return_default__(title, m.text(text=""))
         self.title.__reinit__(self)
 
     def __return_default__(self, obj, default):
-        if obj == -1: return default
+        if obj == -1:
+            return default
         return obj
 
     # find the value series depending on the dir
     def __return_values__(self):
-        if self.dir == 0: return self.x
-        else: return self.y
+        if self.dir == 0:
+            return self.x
+        else:
+            return self.y
 
     # orders the data sets, unless they are counts, that will be dealt with later
     def __order_data__(self, series):
         data = ["count()"]
-        if series != "count()": data = self.data[series]
+        if series != "count()":
+            data = self.data[series]
 
-        if self.__is_numeric__( data ): return self.__sort_df__(data)
+        if self.__is_numeric__(data):
+            return self.__sort_df__(data)
         return data
-        
+
     # Get the count if it was passed in:
     def __count__(self, counted_series, cs_name, counting_series, dir):
         returning = counting_series
@@ -243,11 +243,11 @@ class area:
             for series in self.__unique_series__:
                 counts = []
                 rows = self.series == series
-                sub_section = self.data.loc[ rows, cs_name ]                
-                sub_section = pd.Series(map( round_dig, sub_section ))
+                sub_section = self.data.loc[rows, cs_name]
+                sub_section = pd.Series(map(round_dig, sub_section))
 
                 for value in counted_series:
-                    count = (sub_section == round_dig( value )).sum()
+                    count = (sub_section == round_dig(value)).sum()
                     counts.append(count)
                 returning.append(counts)
         return returning
@@ -255,14 +255,15 @@ class area:
     # DF management
     def __is_numeric__(self, arr):
         string = str(arr[0])
-        if "-" in string: string = string.lstrip("-")
+        if "-" in string:
+            string = string.lstrip("-")
         return string.isdigit()
 
     def __sort_df__(self, df):
         returning = []
         arr = df.to_numpy()
-        arr = arr[ np.logical_not( np.isnan(arr) ) ]
-        returning = np.sort( arr )
+        arr = arr[np.logical_not(np.isnan(arr))]
+        returning = np.sort(arr)
         return returning
 
     def unique_series(self, series):
@@ -272,19 +273,17 @@ class area:
 
     def __find_extremum__(self, func, arr):
         extremum = 0
-        if isinstance( arr[0], list ):
+        if isinstance(arr[0], list):
             for series in arr:
-                extremum = func(extremum, self.__find_extremum__( func, series ))
+                extremum = func(extremum, self.__find_extremum__(func, series))
         else:
             if self.__is_numeric__(arr):
                 for value in arr:
                     extremum = func(value, extremum)
         return extremum
 
-    
+    # SERIES
 
-
-    # SERIES 
     def __return_series_names__(self):
         returning = []
         for series in self.series_data:
@@ -299,8 +298,9 @@ class area:
             # depending on the dir, the value series gets the y or x series, and same with the series series
 
             series_obj = self.Series(self, "", self.x, self.y[index], index)
-            if self.dir==1:
-                series_obj = self.Series(self, str(series), self.y, self.x[index], index)
+            if self.dir == 1:
+                series_obj = self.Series(
+                    self, str(series), self.y, self.x[index], index)
             returning.append(series_obj)
             index += 1
 
@@ -310,7 +310,7 @@ class area:
 
     def render(self):
         self.domain.render()
-        self.title.render( "", (self.pos[0] + (
+        self.title.render("", (self.pos[0] + (
             self.size[0] / 2),  self.pos[1] + (self.size[1] + 20)), self.pallett.text_RGB, alignmentY="bottom")
 
         for series in self.series_data:
@@ -329,7 +329,6 @@ class area:
             self.y = y
             self.index = index
 
-
         def render(self):
 
             points = []
@@ -340,63 +339,60 @@ class area:
             # There are two coordinate points the value (the dir axis) and the count (the opp axis), both can be on either the x or y axis, and so I need to supply the right x or y data depdning on the orientation of the graph ( this is what all the [dir]  and [opp] are)
             # The self.x and self.y are already changed depending on what the direction is, as they are passed in considering the directin, so I dont need to do any work here
 
-            value_space = (self.parent.size[dir] / ( self.parent.maxs[dir] - self.parent.mins[dir]   ))
-            
-            count_space = (self.parent.size[opp]) / ( len(self.parent.__unique_series__) * ( 20 + self.parent.maxs[opp] - self.parent.mins[opp] )  )
-            total_count_space = (self.parent.size[opp]) / ( len(self.parent.__unique_series__) )
+            value_space = (
+                self.parent.size[dir] / (self.parent.maxs[dir] - self.parent.mins[dir]))
+
+            count_space = (self.parent.size[opp]) / (len(self.parent.__unique_series__) * (
+                20 + self.parent.maxs[opp] - self.parent.mins[opp]))
+            total_count_space = (
+                self.parent.size[opp]) / (len(self.parent.__unique_series__))
 
             steps = 1 / len(self.parent.__unique_series__)
             color = self.parent.pallett.primary_color.return_color_between(
-                    self.parent.pallett.secondary_color, steps * self.index).return_color_in("RGB")
+                self.parent.pallett.secondary_color, steps * self.index).return_color_in("RGB")
 
             for i in range(0, len(self.x)):
 
-                value = ((self.x[i] - self.parent.mins[dir]) * value_space ) + self.parent.pos[dir]
-                count = ((self.y[i] - self.parent.mins[opp]) * count_space ) 
+                value = ((self.x[i] - self.parent.mins[dir])
+                         * value_space) + self.parent.pos[dir]
+                count = ((self.y[i] - self.parent.mins[opp]) * count_space)
 
-                count += (total_count_space * self.index) + self.parent.pos[opp]
+                count += (total_count_space * self.index) + \
+                    self.parent.pos[opp]
 
-                point=0
-                if dir == 1: point=(count, value)
-                if dir == 0: point=(value, count)
+                point = 0
+                if dir == 1:
+                    point = (count, value)
+                if dir == 0:
+                    point = (value, count)
                 points.append(point)
                 self.parent.point.render(point, color)
 
-            points.sort( key=lambda y:y[dir] )
+            points.sort(key=lambda y: y[dir])
             for i in range(0, len(points) - 1):
-                
-                self.parent.line.render( points[i], points[i + 1], color )
+
+                self.parent.line.render(points[i], points[i + 1], color)
 
 
+# import cofffee.color as c
+# import cofffee.palletts as p
 
-
-
-
-import pygame
-import pandas as pd
-import numpy as np
-import sys
-
-
-# import coffee.color as c
-# import coffee.palletts as p
-
-# import coffee.pyg as pg
-# import coffee.graphers as g
-# import coffee.grapher as go
-# import coffee.graph_props as m
+# import cofffee.pyg as pg
+# import cofffee.graphers as g
+# import cofffee.grapher as go
+# import cofffee.graph_props as m
 
 # xls = pd.ExcelFile(
-#     "/Users/brianmasse/Developer/Classes/CSC630/independent_work/Coffee Chain Visualization/PART I/data/Coffee Chain.xlsx"
+#     "/Users/brianmasse/Developer/Classes/CSC630/independent_work/cofffee Chain Visualization/PART I/data/cofffee Chain.xlsx"
 # )
-# data = pd.read_excel(xls, "Coffee Chain")
+# data = pd.read_excel(xls, "cofffee Chain")
 
 # width = 1700
 # height = 900
 
 # active_pallett = p.blue_lagoon
 
-# handler = pg.handler( width, height, title="Coffee Shop Data")
+# handler = pg.handler( width, height, title="cofffee Shop Data")
 # main = go.Grapher(handler, (1700, 1000))
 
 # thick_line = m.line(
@@ -404,7 +400,7 @@ import sys
 #         stroke=5
 #     )
 
-# area = g.area(main, data, "count()", "Marketing", "Product Type",  
+# area = g.area(main, data, "count()", "Marketing", "Product Type",
 #     domain=m.domain(
 #         pos=(100, 550),
 #         size=( 1200, 300 )),
@@ -420,7 +416,7 @@ import sys
 #     value_axis=ax.axis(
 #         line=thick_line,
 #         ticks=thick_line,
-#         labels=m.text( 
+#         labels=m.text(
 #             color=(255, 0, 0),
 #             fontSize=10
 #         ),
