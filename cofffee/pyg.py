@@ -2,6 +2,8 @@ import pygame
 import sys
 import os
 
+sys.path.append( sys.path[-1] + "/cofffee" )
+
 class handler:
     def __init__(self, width=0, height=0, title=""):
         pygame.init()
@@ -11,21 +13,19 @@ class handler:
 
         self.title = title
 
+        self.running = True
+        self.screen = pygame.display.set_mode((self.width, self.height))
+
         p = ""
         for path in sys.path:
             if "site-packages" in path:
                 p = path + "/cofffee/Extra/icon.png"
-                print(p)
                 break
-
         if os.path.exists(p):
             Icon = pygame.image.load(p)
-        
-
-        self.running = True
-        self.screen = pygame.display.set_mode((self.width, self.height))
+            pygame.display.set_icon(Icon)
+    
         pygame.display.set_caption(self.title)
-        pygame.display.set_icon(Icon)
 
         self.surface = self.__return_surface__()
 

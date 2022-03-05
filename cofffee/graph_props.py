@@ -1,13 +1,11 @@
 import pygame
 import math
 
-# import palletts as p
-
-import cofffee.palletts as p
-
+import palletts as p
+import accessors as a
 
 class text:
-    def __init__(self, color=-1, font="/Users/brianmasse/Library/Fonts/Monoid-Retina.ttf", fontSize=10, text=-1):
+    def __init__(self, color=-1, font=a.monoid, fontSize=10, text=-1):
         self.color = color
         self.font = font
         self.fontSize = fontSize
