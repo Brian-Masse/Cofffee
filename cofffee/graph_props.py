@@ -1,5 +1,6 @@
 import pygame
 import math
+import os
 
 import palletts as p
 import accessors as a
@@ -7,7 +8,9 @@ import accessors as a
 class text:
     def __init__(self, color=-1, font=a.monoid, fontSize=10, text=-1):
         self.color = color
-        self.font = font
+        
+        self.font = self.return_font(font)
+
         self.fontSize = fontSize
         self.text = text
 
@@ -15,6 +18,16 @@ class text:
         self.rendering = True
 
         self.default = False
+
+    def return_font(self, font):
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        p = dir_path + font
+        if os.path.exists( p ):
+            return p
+        elif os.path.exists( font ):
+            return font
+        return dir_path + a.monoid
+
 
     def __reinit__(self, parent):
         self.parent = parent

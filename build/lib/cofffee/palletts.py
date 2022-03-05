@@ -1,6 +1,4 @@
-# import color as c
-
-import cofffee.color as c
+import color as c
 
 # green tea
 

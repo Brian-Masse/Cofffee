@@ -7,7 +7,7 @@ from os import path
 
 setup(
     name='cofffee',         
-    version='1.0.1.0',
+    version='1.0.1.2',
     description='A complete python visualizer, using an intuitive, consistent, and approachable, OOP framework.',
     url='https://github.com/Brian-Masse/Coffee',
 

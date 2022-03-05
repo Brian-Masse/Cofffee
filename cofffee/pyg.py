@@ -16,11 +16,8 @@ class handler:
         self.running = True
         self.screen = pygame.display.set_mode((self.width, self.height))
 
-        p = ""
-        for path in sys.path:
-            if "site-packages" in path:
-                p = path + "/cofffee/Extra/icon.png"
-                break
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        p = dir_path + "/Extra/icon.png"
         if os.path.exists(p):
             Icon = pygame.image.load(p)
             pygame.display.set_icon(Icon)
@@ -45,20 +42,6 @@ class handler:
     def render_que(self):
         self.screen.blit(self.surface, (0, 0))
         self.surface = self.__return_surface__()
-
-    def render_text(self, message, position, color, size, alignment="center"):
-        font = pygame.font.Font(
-            "/Users/brianmasse/Library/Fonts/Monoid-Retina.ttf", size)
-        text = font.render(message, True, color)
-        textRect = text.get_rect()
-
-        textRect.center = (position[0], self.height - position[1])
-        if alignment == "left":
-            textRect.left = position[0]
-        elif alignment == "right":
-            textRect.right = position[0]
-
-        self.screen.blit(text, textRect)
 
     def render_rect(self, rect, color):
         new_rect = pygame.Rect(rect.left, self.height -

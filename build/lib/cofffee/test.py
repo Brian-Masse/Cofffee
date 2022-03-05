@@ -4,18 +4,18 @@ import pandas as pd
 import numpy as np
 import sys
 
+import pyg as pg
+
 import color as c
 import palletts as p
 
-import pyg as pg
 import graphers as g
 import grapher as go
 import graph_props as m
 import axis as ax
+import accessors as a
 
-xls = pd.ExcelFile(
-    "cofffee/data/coffee.xlsx"
-)
+xls = pd.ExcelFile( a.coffee )
 data = pd.read_excel(xls, "Coffee Chain")
 
 width = 1700
@@ -30,7 +30,7 @@ main = go.Grapher(handler, (1700, 1000))
 line = m.line(
     stroke=5)
 labels = labels = m.text(
-    font="/Users/brianmasse/Library/Fonts/Lulo Clean One Bold.otf",
+    font=a.fetch,
     fontSize=10)
 axis = ax.axis(
     line=line,
@@ -43,7 +43,7 @@ marketing = g.area(main, data, "count()", "Marketing", "Product Type",
                        size=(width / 4, height - 100)),
                    line=line,
                    title=m.text(
-                       font="/Users/brianmasse/Library/Fonts/Lulo Clean One Bold.otf",
+                       font=a.lulo,
                        fontSize=10,
                        text="Quantity of Marketing Campaigns for Various Beverages"),
                    value_axis=axis,

@@ -100,8 +100,8 @@ class distribution:
 
     def render(self):
         self.domain.render()
-        self.graph.handler.render_text(self.title, (self.pos[0] + (
-            self.size[0] / 2),  self.pos[1] + (self.size[1])), self.pallett.text_RGB, 20)
+        # self.graph.handler.render_text(self.title, (self.pos[0] + (
+        #     self.size[0] / 2),  self.pos[1] + (self.size[1])), self.pallett.text_RGB, 20)
 
         for series in self.series_data:
             series.render()
