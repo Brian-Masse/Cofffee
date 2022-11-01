@@ -39,7 +39,7 @@ class Axis:
         self.min = min
 
         self.axis = self.__return_default_axis__(axis)
-        self.axis.__reinit__(self.parent)
+        # self.axis.__reinit__(self.parent)
 
         self.rendering = True
 

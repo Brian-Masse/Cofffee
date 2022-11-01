@@ -207,7 +207,7 @@ class area:
             line, m.line(self.pallett.text_RGB))
         self.line.__reinit__(self)
         self.title = self.__return_default__(title, m.text(text=""))
-        self.title.__reinit__(self)
+        # self.title.__reinit__(self)
 
     def __return_default__(self, obj, default):
         if obj == -1:
