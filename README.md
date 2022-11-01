@@ -5,6 +5,7 @@ A modular, object-oriented data visualizer that enables easily customizable, com
 Enjoy :)
 
 *! New aggregate types, visual variables, and patches are continuing to be added :) !*
+
 *As of Septmeber 2022, the latest version of pygame prevents certain rendering styles from compiling with __reinit__, once a work around is discovered, it will be posted here*
 
 Here are some of the beautiful designs produced by cofffee!
