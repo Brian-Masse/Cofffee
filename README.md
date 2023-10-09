@@ -1,23 +1,19 @@
 # COFFFEE
 
-A modular, object-oriented data visualizer that enables easily customizable, component-based renders. Built off *Numpy and Pandas* it supports a wide range of data types and formats, and includes intelligent and customizable data aggregation functions. Using the *Pygame* library, as well as my custom python *Visual* class, all renders are guaranteed to be effective data communicators, while maintaining a beautifully striking appearance!
+### **Installation**
+``` pip install cofffee ``` !
 
-Enjoy :)
 
-*! New aggregate types, visual variables, and patches are continuing to be added :) !*
+### **Project Overview**
 
-*As of Septmeber 2022, the latest version of pygame prevents certain rendering styles from compiling with __reinit__, once a work around is discovered, it will be posted here*
+Coffee is a modular, object-oriented data visualizer that enables easily customizable, component-based renders. Its built on top of Numpy and Pandas to support a  range of data formats, industry standard aggregation functions, and great performance. In combination with the pygame library and a collection of individually-crafted,  visual packages, cofffe produces visualizations that are both easy to program and effectively communicate data, while maintaining a striking appearance.
 
-Here are some of the beautiful designs produced by cofffee!
+Cofffee was developed to address a lack of easily-customizable, non-proprietary python data visualizers. While taking a data vis class, I noticed that nearly every industry tool either lacked developer customization—such as excel and figma— or had proprietary data formats and style guides. Cofffee solves this as an open source data visualizer, both because it relies on industry standard systems and because it exposes all developer functions in the API for fully customizable renders. The color system + render styles are my own open-source python packages based in sRGB space, but can be translated into HSV and HSL. 
+
+### **Sample Images**
 
 ![Image]( https://github.com/Brian-Masse/Coffee/blob/main/Demo%20Images/1.png )
 ![Image]( https://github.com/Brian-Masse/Coffee/blob/main/Demo%20Images/2.png )
 ![Image]( https://github.com/Brian-Masse/Coffee/blob/main/Demo%20Images/3.png )
 ![Image]( https://github.com/Brian-Masse/Coffee/blob/main/Demo%20Images/4.png )
 ![Image]( https://github.com/Brian-Masse/Coffee/blob/main/Demo%20Images/5.png )
-
-# INSTALLATION:
-
-as simple as 
-``` pip install cofffee ``` !
-
